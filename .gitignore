@@ -17,6 +17,7 @@ android_app/app/build/
 
 # images
 dataset/
+dataset_labeled/
 
 # Logs
 *.log
