@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private fun startCamera() {
         // TFLite 모델 로드 및 ObjectDetector 초기화
         Log.d(TAG, "startCamera() 호출됨")
-//        setupObjectDetector()
+        setupObjectDetector()
 
         // 카메라 실행을 위한 Provider 요청
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -66,24 +66,24 @@ class MainActivity : AppCompatActivity() {
                 .also {
                     // 추론을 수행할 Executor 설정
                     cameraExecutor = Executors.newSingleThreadExecutor()
-//                    it.setAnalyzer(cameraExecutor) { imageProxy ->
-//                        // 1. Bitmap을 TensorImage로 변환합니다.
-//                        val tensorImage = TensorImage.fromBitmap(imageProxy.toBitmap())
-//
-//                        // 2. 이미지 회전 정보를 ImageProcessingOptions 객체에 담습니다.
-//                        val imageProcessingOptions = ImageProcessingOptions.builder()
-//                            .setOrientation(getOrientationFromRotation(imageProxy.imageInfo.rotationDegrees))
-//                            .build()
-//
-//                        // 3. 올바른 인자(TensorImage, ImageProcessingOptions)로 detect 함수를 호출합니다.
-//                        val results = objectDetector.detect(tensorImage, imageProcessingOptions)
-//
-//                        // UI 스레드에서 OverlayView 업데이트
-//                        runOnUiThread {
-//                            binding.overlayView.setResults(results, tensorImage.width, tensorImage.height)
-//                        }
-//                        imageProxy.close()
-//                    }
+                    it.setAnalyzer(cameraExecutor) { imageProxy ->
+                        // 1. Bitmap을 TensorImage로 변환합니다.
+                        val tensorImage = TensorImage.fromBitmap(imageProxy.toBitmap())
+
+                        // 2. 이미지 회전 정보를 ImageProcessingOptions 객체에 담습니다.
+                        val imageProcessingOptions = ImageProcessingOptions.builder()
+                            .setOrientation(getOrientationFromRotation(imageProxy.imageInfo.rotationDegrees))
+                            .build()
+
+                        // 3. 올바른 인자(TensorImage, ImageProcessingOptions)로 detect 함수를 호출합니다.
+                        val results = objectDetector.detect(tensorImage, imageProcessingOptions)
+
+                        // UI 스레드에서 OverlayView 업데이트
+                        runOnUiThread {
+                            binding.overlayView.setResults(results, tensorImage.width, tensorImage.height)
+                        }
+                        imageProxy.close()
+                    }
                 }
 
             // 후면 카메라 선택
@@ -104,20 +104,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupObjectDetector() {
-//        val options = ObjectDetector.ObjectDetectorOptions.builder()
-//            .setMaxResults(5) // 최대 5개 객체 탐지
-//            .setScoreThreshold(0.5f) // 신뢰도 50% 이상만
-//            .build()
-//        try {
-//            // assets 폴더의 tflite 모델 파일로 ObjectDetector 생성
-//            objectDetector = ObjectDetector.createFromFileAndOptions(
-//                this,
-//                "best-int8.tflite", // 모델 파일 이름
-//                options
-//            )
-//        } catch(e: Exception) {
-//            Log.e(TAG, "TFLite 모델 초기화 실패.", e)
-//        }
+        val options = ObjectDetector.ObjectDetectorOptions.builder()
+            .setMaxResults(5) // 최대 5개 객체 탐지
+            .setScoreThreshold(0.5f) // 신뢰도 50% 이상만
+            .build()
+        try {
+            // assets 폴더의 tflite 모델 파일로 ObjectDetector 생성
+            objectDetector = ObjectDetector.createFromFileAndOptions(
+                this,
+                "best_int8.tflite", // 모델 파일 이름
+                options
+            )
+        } catch(e: Exception) {
+            Log.e(TAG, "TFLite 모델 초기화 실패.", e)
+        }
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -153,7 +153,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
+        if (::cameraExecutor.isInitialized) {
+            cameraExecutor.shutdown()
+        }
     }
 
     companion object {
