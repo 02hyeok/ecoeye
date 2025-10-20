@@ -1,0 +1,82 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: sans-serif;
+  background-color: #f0f0f0; /* Light grey background */
+  overflow: hidden;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column; /* Stack header, main, footer vertically */
+  height: 100vh; /* Full viewport height */
+  width: 100vw;
+  background-color: #282c34; /* Dark background for the whole app */
+}
+
+.app-header {
+  background-color: #1a1d23; /* Slightly darker */
+  padding: 10px 20px;
+  color: white;
+  text-align: center;
+  flex-shrink: 0; /* Don't shrink the header */
+}
+.app-header h1 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.camera-area {
+  position: relative; /* Positioning context for video/canvas */
+  flex-grow: 1; /* Take all available vertical space */
+  overflow: hidden; /* Hide anything spilling out */
+  background-color: #000; /* Black background behind video */
+  width: 100%;
+}
+
+.video-feed {
+  position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.overlay-canvas {
+  position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%; 
+}
+
+.app-footer {
+  background-color: #1a1d23; /* Match header */
+  padding: 8px 20px;
+  color: #aaa; /* Lighter grey text */
+  text-align: center;
+  font-size: 0.8em;
+  flex-shrink: 0; /* Don't shrink the footer */
+}
+.app-footer p {
+  margin: 0;
+}
+
+.loading-overlay {
+  position: absolute; /* Relative to camera-area */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); 
+  display: flex;
+  flex-direction: column; /* Center text vertically */
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 10; 
+  font-size: 1.1em;
+}
