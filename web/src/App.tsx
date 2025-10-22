@@ -2,6 +2,7 @@ import './App.css'
 import React, { useEffect, useRef, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
+const COLORS = ['#0000FF', '#FF0000', '#00FF00'];
 const CLASSES = ['cans_bottles', 'general_waste', 'paper'];
 const SCORE_THRESHOLD = 0.5;
 
@@ -163,6 +164,8 @@ function App() {
     for (let i = 0; i < scores.length; ++i) {
       if (scores[i] < SCORE_THRESHOLD) continue;
 
+      const classId = classes[i];
+
       // 박스 좌표 (cx, cy, w, h) -> (x1, y1, w, h)로 변환
       // 및 좌표 스케일링 (320 -> 원본 비디오 크기)
       const [cx_norm, cy_norm, w_norm, h_norm] = boxes.slice(i * 4, (i + 1) * 4);
@@ -182,10 +185,10 @@ function App() {
       const scaledHeight = heightPixel * scaleY;
 
       // 클래스 이름과 점수
-      const label = `${CLASSES[classes[i]]} ${Math.round(scores[i] * 100)}%`;
+      const label = `${CLASSES[classId]} ${Math.round(scores[i] * 100)}%`;
       
       // UI 그리기
-      const color = "green";
+      const color = COLORS[classId] || 'white';
       ctx.strokeStyle = color;
       ctx.lineWidth = 4;
       ctx.strokeRect(x1, y1, scaledWidth, scaledHeight);
